@@ -1,11 +1,24 @@
 <?php
-    require __DIR__ . '/includes/funciones.php';
-/*   $auth = estaAutenticado();
-    if(!$auth){
-        header('location: ./auth/login.php'); 
-    }
-    //$auth = $_SESSION['login'] ?? false;*/
-    $consulta = obtener_productos();
+require __DIR__ . '/includes/funciones.php';
+
+// Obtener la tabla desde GET
+$tabla = $_GET['tabla'] ?? '';
+
+// Validar que la tabla exista
+$tablasPermitidas = obtener_tablas();
+if(!in_array($tabla, $tablasPermitidas)){
+    die("Tabla no permitida");
+}
+
+// Conectar a la base de datos
+require './config/database.php';
+
+// Consulta para obtener todos los registros
+$sql = "SELECT * FROM `$tabla`";
+$resultado = mysqli_query($db, $sql);
+if(!$resultado){
+    die("Error en la consulta: " . mysqli_error($db));
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -15,7 +28,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>CRUD ADMIN</title>
+        <title>CRUD <?php echo ucfirst($tabla); ?></title>
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
         <link href="css/styles-admin.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
@@ -103,115 +116,70 @@ $(document).ready(function(){
 </script>
     </head>
     <body class="sb-nav-fixed">
-        <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-            <!-- Navbar Brand-->
-            <a class="navbar-brand ps-3" href="index.php">Éphémère</a>
-            <!-- Navbar-->
-            <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="#!">Settings</a></li>
-                        <li><a class="dropdown-item" href="#!">Activity Log</a></li>
-                        <li><hr class="dropdown-divider" /></li>
-                        <?php if($auth): ?>
-                            <li><a class="dropdown-item" href="/auth/cerrar-sesion.php">Logout</a></li>
-                        <?php else: ?>
-                        <li><a class="dropdown-item" href="/auth/login.php">Login</a></li>           
-                         <?php endif; ?>   
-                    </ul>
-                </li>
-            </ul>
-        </nav>
-                    <div class="sb-sidenav-footer">
-                        <div class="small">Logged in as:</div>
-                        Start Bootstrap
-                    </div>
-            </div>
-            <div id="layoutSidenav_content">
-            <main class="container-fluid px-4">
-    <h1 class="mt-4">CRUD ADMIN</h1>
-    <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item active">CRUD</li>
-    </ol>
+        <div class="container mt-4">
+    <h1>CRUD: <?php echo ucfirst($tabla); ?></h1>
+    <a href="index.php" class="btn btn-primary mb-3">Volver</a>
+    <a href="#addProductModal" class="btn btn-success mb-3" data-toggle="modal">Nuevo Registro</a>
 
-    <!-- Botones de Acciones -->
-    <div class="mb-3">
-    <a href="#addProductModal" class="btn btn-success" data-toggle="modal"> <span>Nuevo Producto</span></a>
-    					
-    </div>
-
-    <!-- Tarjeta de la Tabla -->
     <div class="card mb-4">
         <div class="card-header">
             <i class="fas fa-table me-1"></i>
-            CRUD
+            Registros de <?php echo ucfirst($tabla); ?>
         </div>
         <div class="card-body">
             <table id="datatablesSimple">
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Descripcion</th>
-                        <th>Cantidad</th>
-                        <th>Precio</th>
-                        <th>Modelo</th>
-                        <th>Marca</th>
-                        <th>Caracteristicas</th>
-                        <th>Acciones</th> <!-- Nueva columna para los botones -->
-                    </tr>
-                </thead>
-                <tfoot>
-                    <tr>
-                        <th>ID</th>
-                        <th>Descripcion</th>
-                        <th>Cantidad</th>
-                        <th>Precio</th>
-                        <th>Modelo</th>
-                        <th>Marca</th>
-                        <th>Caracteristicas</th>
+                        <?php
+                        // Obtener los nombres de columnas
+                        $primerFila = mysqli_fetch_assoc($resultado);
+                        $columnas = [];
+                        if($primerFila){
+                            foreach(array_keys($primerFila) as $columna){
+                                if($columna != 'id'){ // id ya está como primera columna
+                                    echo "<th>" . ucfirst($columna) . "</th>";
+                                    $columnas[] = $columna;
+                                }
+                            }
+                        }
+                        ?>
                         <th>Acciones</th>
                     </tr>
-                </tfoot>
+                </thead>
                 <tbody>
-                
-                <?php while($producto = mysqli_fetch_assoc($consulta)){ ?>
-                    <tr>
-                        
-                        <td>
-                            <span class="custom-checkbox">
-                            <input type="checkbox" id="checkbox1" name="options[]" class="user_checkbox" data-prod-id="<?php echo $producto['id']; ?>">
-                            <label for="checkbox1"></label>
-                            </span>
-                        <?php echo $producto['id']; ?>
-                        </td>
-                        <td><?php echo $producto['descripcion']; ?></td>
-                        <td><?php echo $producto['cantidad']; ?></td>
-                        <td><?php echo $producto['precio']; ?></td>
-                        <td><?php echo $producto['modelo']; ?></td>
-                        <td><?php echo $producto['marca']; ?></td>
-                        <td><?php echo $producto['caracteristicas']; ?></td>
-                        <td>
-                            <!-- Botones de Acciones -->
-                        <a href="#editProductModal" class="edit" data-toggle="modal"
-							data-prod-id="<?php  echo $producto['id']; ?>" 
-							data-desc-id="<?php  echo $producto['descripcion']; ?>" 
-							data-cant-id="<?php  echo $producto['cantidad']; ?>" 
-							data-precio-id="<?php  echo $producto['precio']; ?>" 
-							data-mod-id="<?php  echo $producto['modelo']; ?>"
-							data-marca-id="<?php  echo $producto['marca']; ?>"
-							data-carac-id="<?php  echo $producto['caracteristicas']; ?>" 
-							title="Edit">
-                            <i class="fas fa-edit"></i>
-                        </a>
-							<a href="#deleteProductModal" class="delete" data-prod-id="<?php  echo $producto['id']; ?>" data-toggle="modal"><i data-toggle="tooltip" title="Delete" class="fas fa-trash-alt"></i></a>
-                        </td>
-                    </tr>
-                <?php } ?>
+                    <?php
+                    if($primerFila){
+                        echo "<tr>";
+                        echo "<td>" . $primerFila['id'] . "</td>";
+                        foreach($columnas as $col){
+                            echo "<td>" . htmlspecialchars($primerFila[$col]) . "</td>";
+                        }
+                        echo "<td>
+                            <a href='#editProductModal' class='edit btn btn-sm btn-info' data-prod-id='{$primerFila['id']}'>Editar</a>
+                            <a href='#deleteProductModal' class='delete btn btn-sm btn-danger' data-prod-id='{$primerFila['id']}'>Borrar</a>
+                        </td>";
+                        echo "</tr>";
+                    }
+
+                    while($fila = mysqli_fetch_assoc($resultado)){
+                        echo "<tr>";
+                        echo "<td>" . $fila['id'] . "</td>";
+                        foreach($columnas as $col){
+                            echo "<td>" . htmlspecialchars($fila[$col]) . "</td>";
+                        }
+                        echo "<td>
+                            <a href='#editProductModal' class='edit btn btn-sm btn-info' data-prod-id='{$fila['id']}'>Editar</a>
+                            <a href='#deleteProductModal' class='delete btn btn-sm btn-danger' data-prod-id='{$fila['id']}'>Borrar</a>
+                        </td>";
+                        echo "</tr>";
+                    }
+                    ?>
                 </tbody>
             </table>
         </div>
     </div>
+</div>
 <!-- Add Modal HTML -->
 <div id="addProductModal" class="modal fade">
 	<div class="modal-dialog">
