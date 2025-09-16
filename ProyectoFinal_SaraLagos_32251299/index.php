@@ -57,7 +57,7 @@
     <?php foreach($tablas as $tabla) { ?>
       <div class="productos">
         <a href="tabla.php?tabla=<?php echo $tabla; ?>">
-          <img class="producto-imagen" src="img/<?php echo $tabla; ?>.jpg" alt="Imagen <?php echo $tabla; ?>">
+          <img class="producto-imagen" src="img/<?php echo $tabla; ?>.png" alt="Imagen <?php echo $tabla; ?>">
           <div class="producto-informacion">
             <p class="producto-nombre"><?php echo ucfirst($tabla); ?></p>
           </div>
