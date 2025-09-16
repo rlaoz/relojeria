@@ -68,18 +68,6 @@
 </main>
 <!--Fin productos-->
 
-<!--Inicio testimonios-->
-<div class="testimonios" id="test-section">
-	<div class="shadow"></div>
-	<span class="borde-arriba"></span>
-	<h1>Testimonals</h1>
-  <img class="img-test" src="img/test.jpg" alt="Imagen testimonios">
-	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla suscipit odio eu maximus finibus. Quisque nec felis ligula. Quisque quis augue vel ipsum convallis egestas.</p>
-	<p class="source"> CEO - LLOUD</p>
-	<span class="borde-abajo"></span>
-</div>
-<!--Fin testimonios-->
-
 <!-- Inicio Footer -->
 <footer class="footer-section" id="contact-section">
     <div class="container relative">
