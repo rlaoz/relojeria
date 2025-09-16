@@ -32,12 +32,9 @@
 
     <div class="collapse navbar-collapse" id="navbars">
         <ul class="custom-navbar-nav navbar-nav ms-auto mb-2 mb-md-0">
-            <li class="nav-item active"><a class="nav-link" href="index.php">Home</a></li>
-            <li><a class="nav-link" href="index.php#overview-section">Overview</a></li>
-            <li><a class="nav-link" href="index.php#about-section">About us</a></li>
-            <li><a class="nav-link" href="#contact-section">Contact us</a></li>
-            <li><a class="nav-link" href="products.php">Products</a></li>
-            <li><a class="nav-link" href="#test-section">Testimonials</a></li>
+            <li class="nav-item active"><a class="nav-link" href="index.php">Tablas principales</a></li>
+            <li><a class="nav-link" href="consultas.php">Consultas</a></li>
+
         </ul>
 
         <ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
