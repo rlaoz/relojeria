@@ -32,11 +32,13 @@ if(!$resultado){
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
         <link href="css/styles-admin.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+      <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
         <script>
+var tablaActual = "<?php echo $tabla; ?>";
+
 $(document).ready(function(){
 	// Activate tooltip
 	$('[data-toggle="tooltip"]').tooltip();
@@ -59,57 +61,61 @@ $(document).ready(function(){
 			$("#selectAll").prop("checked", false);
 		}
 	});
+$(document).ready(function(){
 
-	//agregar
-    $('#addProductModal form').on('submit', function (e) {
-        e.preventDefault(); // Evitar el envío del formulario por defecto
-        CrearProd();
+    // ----------------------------
+    // AGREGAR
+    // ----------------------------
+    $('#addProductModal form').on('submit', function(e){
+        e.preventDefault(); // Evita el envío normal
+        enviarDatos(tablaActual, 1, $('#addProductModal')); // 1 = agregar
     });
 
-
-	//borrar
-	$('#deleteProductModal').on('show.bs.modal', function (e) {
-    var button = $(e.relatedTarget); // Botón que activó el modal
-    var id = button.data('prod-id');
-    
-    var modal = $(this);
-    modal.find('#id_d').val(id);
-	});
-
-	$('#deleteProductModal form').on('submit', function (e) {
-    e.preventDefault();
-    var id = $('#id_d').val();
-    eliminarProducto(id);
-	});
-
-    //editar
-	$(document).ready(function() {
-	$('#update').on('click', function() {
-        modificarProd();
+    // ----------------------------
+    // ELIMINAR
+    // ----------------------------
+    // Al abrir el modal, se pasa el id del registro a eliminar
+    $('#deleteProductModal').on('show.bs.modal', function(e){
+        var button = $(e.relatedTarget); // Botón que abrió el modal
+        var id = button.data('prod-id');
+        $(this).find('#id_d').val(id);
     });
 
-    $('.edit').on('click', function() {
-        var id = $(this).data('prod-id');
-        var descripcion = $(this).data('desc-id');
-        var cantidad = $(this).data('cant-id');
-        var precio = $(this).data('precio-id');
-        var modelo = $(this).data('mod-id');
-        var marca = $(this).data('marca-id');
-        var caracteristicas = $(this).data('carac-id');
-		console.log(id, descripcion, cantidad, precio, modelo, marca, caracteristicas);
-
-        $('#id_prod').val(id);
-        $('#desc_prod').val(descripcion);
-        $('#cant_prod').val(cantidad);
-        $('#precio_prod').val(precio);
-        $('#mod_prod').val(modelo);
-        $('#marca_prod').val(marca);
-        $('#carac_prod').val(caracteristicas);
-
-        $('#editProductModal').modal('show');
+    // Cuando se confirma la eliminación
+    $('#deleteProductModal form').on('submit', function(e){
+        e.preventDefault();
+        enviarDatos(tablaActual, 3, $('#deleteProductModal')); // 3 = eliminar
     });
-	
+
+    // ----------------------------
+    // EDITAR
+    // ----------------------------
+    // Al hacer click en editar, llenamos el modal dinámicamente
+    $('.edit').on('click', function(){
+    var row = $(this).closest('tr'); // fila completa
+    var modal = $('#editProductModal');
+
+    // Recorrer cada celda y asignar al input correspondiente
+    row.find('td').each(function(){
+        var name = $(this).data('name');
+        if(name){
+            name = name.toLowerCase(); // asegurar coincidencia
+            modal.find('[name="'+name+'"]').val($(this).text().trim());
+        }
+    });
+
+    modal.modal('show');
 });
+
+
+    // Cuando se envía el modal de editar
+    $('#editProductModal form').on('submit', function(e){
+        e.preventDefault();
+        enviarDatos(tablaActual, 2, $('#editProductModal')); // 2 = editar
+    });
+
+});
+
 });
 
 
@@ -131,16 +137,15 @@ $(document).ready(function(){
 <thead>
     <tr>
         <?php
-        // Obtener los nombres de columnas
+        // Sacar una fila para conocer las columnas
         $primerFila = mysqli_fetch_assoc($resultado);
         $columnas = [];
         $clavePrimaria = '';
 
         if ($primerFila) {
             $keys = array_keys($primerFila);
-            $clavePrimaria = $keys[0]; // Asumimos que la primera columna es la clave primaria
+            $clavePrimaria = $keys[0]; // Asumimos PK en la primera columna
 
-            // Imprimir cabecera de tabla
             echo "<th>" . ucfirst($clavePrimaria) . "</th>";
             foreach ($keys as $col) {
                 if ($col !== $clavePrimaria) {
@@ -150,41 +155,33 @@ $(document).ready(function(){
             }
             echo "<th>Acciones</th>";
         }
+
+        // Regresar el puntero al inicio para no perder la primera fila
+        mysqli_data_seek($resultado, 0);
         ?>
     </tr>
 </thead>
 
 <tbody>
-    <?php
-    // Reimprimir primera fila si existe
-    if ($primerFila) {
-        echo "<tr>";
-        echo "<td>" . htmlspecialchars($primerFila[$clavePrimaria]) . "</td>";
-        foreach ($columnas as $col) {
-            echo "<td>" . htmlspecialchars($primerFila[$col]) . "</td>";
-        }
-        echo "<td>
-            <a href='#editProductModal' class='edit btn btn-sm btn-info' data-prod-id='{$primerFila[$clavePrimaria]}'>Editar</a>
-            <a href='#deleteProductModal' class='delete btn btn-sm btn-danger' data-prod-id='{$primerFila[$clavePrimaria]}'>Borrar</a>
-        </td>";
-        echo "</tr>";
+<?php
+while ($fila = mysqli_fetch_assoc($resultado)) {
+    echo "<tr>";
+    // PK
+    echo "<td data-name='".strtolower($clavePrimaria)."'>" . htmlspecialchars($fila[$clavePrimaria]) . "</td>";
+    // Otras columnas
+    foreach ($columnas as $col) {
+        echo "<td data-name='".strtolower($col)."'>" . htmlspecialchars($fila[$col]) . "</td>";
     }
-
-    // Imprimir el resto de filas
-    while ($fila = mysqli_fetch_assoc($resultado)) {
-        echo "<tr>";
-        echo "<td>" . htmlspecialchars($fila[$clavePrimaria]) . "</td>";
-        foreach ($columnas as $col) {
-            echo "<td>" . htmlspecialchars($fila[$col]) . "</td>";
-        }
-        echo "<td>
-            <a href='#editProductModal' class='edit btn btn-sm btn-info' data-prod-id='{$fila[$clavePrimaria]}'>Editar</a>
-            <a href='#deleteProductModal' class='delete btn btn-sm btn-danger' data-prod-id='{$fila[$clavePrimaria]}'>Borrar</a>
-        </td>";
-        echo "</tr>";
-    }
-    ?>
+    echo "<td>
+        <a href='#editProductModal' class='edit btn btn-sm btn-info' data-prod-id='{$fila[$clavePrimaria]}'>Editar</a>
+        <a href='#deleteProductModal' class='delete btn btn-sm btn-danger' data-prod-id='{$fila[$clavePrimaria]}'>Borrar</a>
+    </td>";
+    echo "</tr>";
+}
+?>
 </tbody>
+
+    
 
             </table>
         </div>
@@ -192,93 +189,62 @@ $(document).ready(function(){
 </div>
 <!-- Add Modal HTML -->
 <div id="addProductModal" class="modal fade">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<form>
-				<div class="modal-header">						
-					<h4 class="modal-title">Agregar Productos</h4>
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				</div>
-				<div class="modal-body">					
-					<div class="form-group">
-						<label>Descripcion</label>
-						<input type="text" id="descripcion" name="descripcion" class="form-control" required>
-					</div>
-					<div class="form-group">
-						<label>Cantidad</label>
-						<input type="number" id="cantidad" name= "cantidad" class="form-control" required>
-					</div>
-					<div class="form-group">
-						<label>Precio</label>
-						<input type="text" id="precio" name= "precio" class="form-control" required>
-					</div>
-					<div class="form-group">
-						<label>Modelo</label>
-						<input type="text" id="modelo" name= "modelo" class="form-control" required>
-					</div>	
-                    <div class="form-group">
-						<label>Marca</label>
-						<input type="text" id="marca" name= "marca" class="form-control" required>
-					</div>	
-                    <div class="form-group">
-						<label>Caracteristicas</label>
-                        <textarea class="form-control" id="caracteristicas" name= "caracteristicas" required></textarea>
-					</div>					
-				</div>
-				<div class="modal-footer">
-					<input type="hidden" value="1" name="type">
-					<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancelar">
-					<input type="submit" class="btn btn-success" value="Agregar">
-				</div>
-			</form>
-		</div>
-	</div>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="formAdd">
+        <div class="modal-header">
+          <h4 class="modal-title">Agregar <?php echo ucfirst($tabla); ?></h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <?php foreach ($columnas as $col): ?>
+            <div class="form-group">
+              <label><?php echo ucfirst(str_replace("_", " ", $col)); ?></label>
+              <input type="text" name="<?php echo $col; ?>" class="form-control" required>
+            </div>
+          <?php endforeach; ?>
+        </div>
+        <div class="modal-footer">
+          <input type="hidden" name="type" value="1">
+          <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancelar">
+          <input type="submit" class="btn btn-success" value="Agregar">
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
+
 <!-- Edit Modal HTML -->
 <div id="editProductModal" class="modal fade">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<form>
-				<div class="modal-header">						
-					<h4 class="modal-title">Editar Producto</h4>
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				</div>
-				<div class="modal-body">					
-					<input type="hidden" id="id_prod" name="id" class="form-control" required>       
-					<div class="form-group">
-						<label>Descripcion</label>
-						<input type="text" id="desc_prod" name="descripcion" class="form-control" required>
-					</div>
-					<div class="form-group">
-						<label>Cantidad</label>
-						<input type="number" id="cant_prod" name="cantidad" class="form-control" required>
-					</div>
-					<div class="form-group">
-						<label>Precio</label>
-						<input type="text" id="precio_prod" name="precio" class="form-control" required>
-					</div>
-					<div class="form-group">
-						<label>Modelo</label>
-						<input type="text" id="mod_prod" name="modelo" class="form-control" required>
-					</div>	
-                    <div class="form-group">
-						<label>Marca</label>
-						<input type="text" id="marca_prod" name="marca" class="form-control" required>
-					</div>	
-                    <div class="form-group">
-						<label>Caracteristicas</label>
-                        <textarea class="form-control" id="carac_prod" name="caracteristicas" required></textarea>
-					</div>				
-				</div>
-				<div class="modal-footer">
-					<input type="hidden" value="2" name="type">
-					<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancelar">
-					<input type="submit" class="btn btn-info" id="update" value="Guardar">
-				</div>
-			</form>
-		</div>
-	</div>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="formEdit">
+        <div class="modal-header">
+          <h4 class="modal-title">Editar <?php echo ucfirst($tabla); ?></h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <!-- Hidden PK -->
+          <input type="hidden" name="<?php echo strtolower($clavePrimaria); ?>" id="edit_<?php echo strtolower($clavePrimaria); ?>">
+
+          <?php foreach ($columnas as $col): ?>
+            <div class="form-group">
+              <label><?php echo ucfirst(str_replace("_", " ", $col)); ?></label>
+              <input type="text" name="<?php echo strtolower($col); ?>" id="edit_<?php echo strtolower($col); ?>" class="form-control" required>
+            </div>
+          <?php endforeach; ?>
+        </div>
+        <div class="modal-footer">
+          <input type="hidden" name="type" value="2">
+          <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancelar">
+          <input type="submit" class="btn btn-info" value="Guardar">
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
+
+
 <!-- Delete Modal HTML -->
 <div id="deleteProductModal" class="modal fade">
 	<div class="modal-dialog">
@@ -311,7 +277,7 @@ $(document).ready(function(){
                 </footer>
             </div>
         </div>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+      <!--  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script> -->
         <script src="js/ajax.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
         <script src="assets/demo/chart-area-demo.js"></script>

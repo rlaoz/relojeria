@@ -1,5 +1,5 @@
 <?php
-    $db = mysqli_connect('localhost:3306' , 'root' , 'Jaehee1201', 'manjares_de_honduras');
+    $db = mysqli_connect('localhost:3306' , 'root' , '', 'manjares_de_honduras');
 
     if(!$db){
         echo 'Error de conexion a base de datos <br>';
