@@ -1,10 +1,10 @@
 <?php
     require __DIR__ . '/includes/funciones.php';
-    $auth = estaAutenticado();
+/*   $auth = estaAutenticado();
     if(!$auth){
         header('location: ./auth/login.php'); 
     }
-    //$auth = $_SESSION['login'] ?? false;
+    //$auth = $_SESSION['login'] ?? false;*/
     $consulta = obtener_productos();
 ?>
 <!DOCTYPE html>
