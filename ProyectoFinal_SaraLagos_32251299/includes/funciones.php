@@ -159,7 +159,14 @@ function obtener_tablas() {
         "proveedores",
         "platos",
         "menu",
-        "acompaniante"
+        "acompaniante",
+        "acompaniante_plato",
+        "menu_plato",
+        "producto_acompaniante",
+        "producto_proveedor",
+        "tel_proveedor",
+        "bitacora_menu"
+
     ];
     return $tablas;
 }
