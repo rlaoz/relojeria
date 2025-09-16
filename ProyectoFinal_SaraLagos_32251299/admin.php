@@ -32,7 +32,6 @@ if(!$resultado){
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
         <link href="css/styles-admin.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-      <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
@@ -92,21 +91,19 @@ $(document).ready(function(){
     // ----------------------------
     // Al hacer click en editar, llenamos el modal dinámicamente
     $('.edit').on('click', function(){
-    var row = $(this).closest('tr'); // fila completa
-    var modal = $('#editProductModal');
+        var row = $(this).closest('tr'); // fila completa
+        var modal = $('#editProductModal');
 
-    // Recorrer cada celda y asignar al input correspondiente
-    row.find('td').each(function(){
-        var name = $(this).data('name');
-        if(name){
-            name = name.toLowerCase(); // asegurar coincidencia
-            modal.find('[name="'+name+'"]').val($(this).text().trim());
-        }
+        // Recorrer cada celda y asignar al input correspondiente por name
+        row.find('td').each(function(){
+            var name = $(this).data('name'); // asumimos que cada <td> tiene data-name="campo"
+            if(name){
+                modal.find('[name="'+name+'"]').val($(this).text().trim());
+            }
+        });
+
+        modal.modal('show');
     });
-
-    modal.modal('show');
-});
-
 
     // Cuando se envía el modal de editar
     $('#editProductModal form').on('submit', function(e){
@@ -137,15 +134,16 @@ $(document).ready(function(){
 <thead>
     <tr>
         <?php
-        // Sacar una fila para conocer las columnas
-        $primerFila = mysqli_fetch_assoc($resultado);
+        // Obtener los nombres de columnas
+        /*$primerFila = mysqli_fetch_assoc($resultado);
         $columnas = [];
         $clavePrimaria = '';
 
         if ($primerFila) {
             $keys = array_keys($primerFila);
-            $clavePrimaria = $keys[0]; // Asumimos PK en la primera columna
+            $clavePrimaria = $keys[0]; // Asumimos que la primera columna es la clave primaria
 
+            // Imprimir cabecera de tabla
             echo "<th>" . ucfirst($clavePrimaria) . "</th>";
             foreach ($keys as $col) {
                 if ($col !== $clavePrimaria) {
@@ -156,21 +154,91 @@ $(document).ready(function(){
             echo "<th>Acciones</th>";
         }
 
-        // Regresar el puntero al inicio para no perder la primera fila
-        mysqli_data_seek($resultado, 0);
+        if ($primerFila) {
+    $keys = array_keys($primerFila);
+    $clavePrimaria = $keys[0]; // Suponemos la primera columna como PK
+
+    foreach ($keys as $col) {
+        if ($col !== $clavePrimaria) {
+            $columnas[] = $col;
+        }
+    }
+}*/
+$primerFila = mysqli_fetch_assoc($resultado);
+$columnas = [];
+$clavePrimaria = '';
+
+if ($primerFila) {
+    $keys = array_keys($primerFila);
+    $clavePrimaria = $keys[0]; // PK
+    foreach ($keys as $col) {
+        if ($col !== $clavePrimaria) {
+            $columnas[] = $col; // llenar columnas solo una vez
+        }
+    }
+}
+
+// Imprimir encabezado
+echo "<thead><tr>";
+echo "<th>" . ucfirst($clavePrimaria) . "</th>";
+foreach ($columnas as $col) {
+    echo "<th>" . ucfirst($col) . "</th>";
+}
+echo "<th>Acciones</th>";
+echo "</tr></thead>";
         ?>
     </tr>
 </thead>
 
 <tbody>
-<?php
+    <?php
+    // Reimprimir primera fila si existe
+    /*if ($primerFila) {
+        echo "<tr>";
+        echo "<td data-name='{$clavePrimaria}'>" . htmlspecialchars($primerFila[$clavePrimaria]) . "</td>";
+        foreach ($columnas as $col) {
+            echo "<td data-name='{$col}'>" . htmlspecialchars($primerFila[$col]) . "</td>";
+        }
+
+        echo "<td>
+            <a href='#editProductModal' class='edit btn btn-sm btn-info' data-prod-id='{$primerFila[$clavePrimaria]}'>Editar</a>
+            <a href='#deleteProductModal' class='delete btn btn-sm btn-danger' data-prod-id='{$primerFila[$clavePrimaria]}'>Borrar</a>
+        </td>";
+        echo "</tr>";
+    }
+
+    // Imprimir el resto de filas
+    while ($fila = mysqli_fetch_assoc($resultado)) {
+        echo "<tr>";
+        echo "<td>" . htmlspecialchars($fila[$clavePrimaria]) . "</td>";
+        foreach ($columnas as $col) {
+            echo "<td>" . htmlspecialchars($fila[$col]) . "</td>";
+        }
+        echo "<td>
+            <a href='#editProductModal' class='edit btn btn-sm btn-info' data-prod-id='{$fila[$clavePrimaria]}'>Editar</a>
+            <a href='#deleteProductModal' class='delete btn btn-sm btn-danger' data-prod-id='{$fila[$clavePrimaria]}'>Borrar</a>
+        </td>";
+        echo "</tr>";
+    }*/
+        if ($primerFila) {
+    echo "<tr>";
+    echo "<td data-name='{$clavePrimaria}'>" . htmlspecialchars($primerFila[$clavePrimaria]) . "</td>";
+    foreach ($columnas as $col) {
+        echo "<td data-name='{$col}'>" . htmlspecialchars($primerFila[$col]) . "</td>";
+    }
+    echo "<td>
+        <a href='#editProductModal' class='edit btn btn-sm btn-info' data-prod-id='{$primerFila[$clavePrimaria]}'>Editar</a>
+        <a href='#deleteProductModal' class='delete btn btn-sm btn-danger' data-prod-id='{$primerFila[$clavePrimaria]}'>Borrar</a>
+    </td>";
+    echo "</tr>";
+}
+
+// Imprimir resto de filas
 while ($fila = mysqli_fetch_assoc($resultado)) {
     echo "<tr>";
-    // PK
-    echo "<td data-name='".strtolower($clavePrimaria)."'>" . htmlspecialchars($fila[$clavePrimaria]) . "</td>";
-    // Otras columnas
+    echo "<td data-name='{$clavePrimaria}'>" . htmlspecialchars($fila[$clavePrimaria]) . "</td>";
     foreach ($columnas as $col) {
-        echo "<td data-name='".strtolower($col)."'>" . htmlspecialchars($fila[$col]) . "</td>";
+        echo "<td data-name='{$col}'>" . htmlspecialchars($fila[$col]) . "</td>";
     }
     echo "<td>
         <a href='#editProductModal' class='edit btn btn-sm btn-info' data-prod-id='{$fila[$clavePrimaria]}'>Editar</a>
@@ -178,10 +246,9 @@ while ($fila = mysqli_fetch_assoc($resultado)) {
     </td>";
     echo "</tr>";
 }
-?>
+        
+    ?>
 </tbody>
-
-    
 
             </table>
         </div>
@@ -224,13 +291,12 @@ while ($fila = mysqli_fetch_assoc($resultado)) {
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
         <div class="modal-body">
-          <!-- Hidden PK -->
-          <input type="hidden" name="<?php echo strtolower($clavePrimaria); ?>" id="edit_<?php echo strtolower($clavePrimaria); ?>">
+          <input type="hidden" name="<?php echo $clavePrimaria; ?>" id="edit_<?php echo $clavePrimaria; ?>">
 
           <?php foreach ($columnas as $col): ?>
             <div class="form-group">
               <label><?php echo ucfirst(str_replace("_", " ", $col)); ?></label>
-              <input type="text" name="<?php echo strtolower($col); ?>" id="edit_<?php echo strtolower($col); ?>" class="form-control" required>
+              <input type="text" name="<?php echo $col; ?>" id="edit_<?php echo $col; ?>" class="form-control" required>
             </div>
           <?php endforeach; ?>
         </div>
@@ -243,7 +309,6 @@ while ($fila = mysqli_fetch_assoc($resultado)) {
     </div>
   </div>
 </div>
-
 
 <!-- Delete Modal HTML -->
 <div id="deleteProductModal" class="modal fade">
@@ -277,7 +342,6 @@ while ($fila = mysqli_fetch_assoc($resultado)) {
                 </footer>
             </div>
         </div>
-      <!--  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script> -->
         <script src="js/ajax.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
         <script src="assets/demo/chart-area-demo.js"></script>

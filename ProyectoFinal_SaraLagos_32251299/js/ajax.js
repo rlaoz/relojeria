@@ -1,13 +1,14 @@
 function obtenerDatosModal(modal) {
     let datos = {};
     modal.find('input, textarea, select').each(function() {
-        const name = $(this).attr('name');
+        const name = $(this).data('name'); // antes era .attr('name')
         if (name) {
             datos[name] = $(this).val();
         }
     });
     return datos;
 }
+
 
 function enviarDatos(tabla, tipoOperacion, modal) {
     const datos = obtenerDatosModal(modal);
