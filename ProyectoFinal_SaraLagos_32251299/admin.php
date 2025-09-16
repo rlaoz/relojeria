@@ -90,20 +90,26 @@ $(document).ready(function(){
     // EDITAR
     // ----------------------------
     // Al hacer click en editar, llenamos el modal dinámicamente
-    $('.edit').on('click', function(){
-        var row = $(this).closest('tr'); // fila completa
-        var modal = $('#editProductModal');
+$('.edit').on('click', function(){
+    var row = $(this).closest('tr');
+    var modal = $('#editProductModal');
 
-        // Recorrer cada celda y asignar al input correspondiente por name
-        row.find('td').each(function(){
-            var name = $(this).data('name'); // asumimos que cada <td> tiene data-name="campo"
-            if(name){
-                modal.find('[name="'+name+'"]').val($(this).text().trim());
-            }
-        });
-
-        modal.modal('show');
+    // Llenar todos los inputs visibles
+    row.find('td').each(function(){
+        var name = $(this).data('name');
+        if(name){
+            modal.find('[name="'+name+'"]').val($(this).text().trim());
+        }
     });
+
+    // Llenar el input hidden del PK tomando la primera columna (la que tiene data-name)
+    var pk_td = row.find('td').first(); // asumimos que la primera columna es PK
+    var pk_value = pk_td.text().trim();
+    var pk_name = pk_td.data('name');
+    modal.find('input[name="'+pk_name+'"]').val(pk_value);
+
+    modal.modal('show');
+});
 
     // Cuando se envía el modal de editar
     $('#editProductModal form').on('submit', function(e){
@@ -336,7 +342,7 @@ while ($fila = mysqli_fetch_assoc($resultado)) {
                 <footer class="py-4 bg-light mt-auto">
                     <div class="container-fluid px-4">
                         <div class="d-flex align-items-center justify-content-between small">
-                            <div class="text-muted">Copyright &copy; </div>
+                            <div class="text-muted">Copyright &copy; Sara Lagos 32251299</div>
                         </div>
                     </div>
                 </footer>
