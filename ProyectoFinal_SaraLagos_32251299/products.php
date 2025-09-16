@@ -1,6 +1,6 @@
 <?php
      require __DIR__ . '/includes/funciones.php';
-    $consulta = obtener_productos();
+    $tablas = obtener_tablas();
 ?>
 
 <!DOCTYPE html>
@@ -24,7 +24,7 @@
 <nav class="custom-navbar navbar navbar-expand-md" aria-label="nav-bar">
 
 <div class="container">
-    <a class="navbar-brand" href="index.php">Éphémère<span>.</span></a>
+    <a class="navbar-brand" href="index.php">Manjares de Honduras<span>.</span></a>
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbars" aria-controls="navbars" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -52,17 +52,16 @@
 
 <!--Inicio productos-->
 <main class="contenedor">
-  <h1>SHOP</h1>
+  <h1>Tablas Disponibles</h1>
   <div class="grid">
-  <?php while($producto = mysqli_fetch_assoc($consulta)){ ?>
-  <div class="productos">
-      <a href="detalleprod.php?idProd=<?php echo $producto['id'];?>">
-          <img id="img<?php echo $producto['id']; ?>" class="producto-imagen" src="img/<?php echo $producto['id']; ?>.jpg" alt="Imagen Reloj">
-              <div class="producto-informacion">
-                  <p class="producto-nombre"><?php echo $producto['descripcion']; ?></p>
-                  <p class="producto-precio">$<?php echo $producto['precio']; ?></p>
-              </div>
-          </a>
+    <?php foreach($tablas as $tabla) { ?>
+      <div class="productos">
+        <a href="tabla.php?tabla=<?php echo $tabla; ?>">
+          <img class="producto-imagen" src="img/<?php echo $tabla; ?>.jpg" alt="Imagen <?php echo $tabla; ?>">
+          <div class="producto-informacion">
+            <p class="producto-nombre"><?php echo ucfirst($tabla); ?></p>
+          </div>
+        </a>
       </div>
     <?php } ?>
   </div>

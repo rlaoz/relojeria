@@ -152,5 +152,17 @@ function orden($id) {
     }
 }
 
+function obtener_tablas() {
+    // Lista de tablas que quieres mostrar
+    $tablas = [
+        "productos",
+        "proveedores",
+        "platos",
+        "menu",
+        "acompaniante"
+    ];
+    return $tablas;
+}
+
 
 ?>
