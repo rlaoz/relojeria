@@ -128,54 +128,64 @@ $(document).ready(function(){
         </div>
         <div class="card-body">
             <table id="datatablesSimple">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <?php
-                        // Obtener los nombres de columnas
-                        $primerFila = mysqli_fetch_assoc($resultado);
-                        $columnas = [];
-                        if($primerFila){
-                            foreach(array_keys($primerFila) as $columna){
-                                if($columna != 'id'){ // id ya está como primera columna
-                                    echo "<th>" . ucfirst($columna) . "</th>";
-                                    $columnas[] = $columna;
-                                }
-                            }
-                        }
-                        ?>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    if($primerFila){
-                        echo "<tr>";
-                        echo "<td>" . $primerFila['id'] . "</td>";
-                        foreach($columnas as $col){
-                            echo "<td>" . htmlspecialchars($primerFila[$col]) . "</td>";
-                        }
-                        echo "<td>
-                            <a href='#editProductModal' class='edit btn btn-sm btn-info' data-prod-id='{$primerFila['id']}'>Editar</a>
-                            <a href='#deleteProductModal' class='delete btn btn-sm btn-danger' data-prod-id='{$primerFila['id']}'>Borrar</a>
-                        </td>";
-                        echo "</tr>";
-                    }
+<thead>
+    <tr>
+        <?php
+        // Obtener los nombres de columnas
+        $primerFila = mysqli_fetch_assoc($resultado);
+        $columnas = [];
+        $clavePrimaria = '';
 
-                    while($fila = mysqli_fetch_assoc($resultado)){
-                        echo "<tr>";
-                        echo "<td>" . $fila['id'] . "</td>";
-                        foreach($columnas as $col){
-                            echo "<td>" . htmlspecialchars($fila[$col]) . "</td>";
-                        }
-                        echo "<td>
-                            <a href='#editProductModal' class='edit btn btn-sm btn-info' data-prod-id='{$fila['id']}'>Editar</a>
-                            <a href='#deleteProductModal' class='delete btn btn-sm btn-danger' data-prod-id='{$fila['id']}'>Borrar</a>
-                        </td>";
-                        echo "</tr>";
-                    }
-                    ?>
-                </tbody>
+        if ($primerFila) {
+            $keys = array_keys($primerFila);
+            $clavePrimaria = $keys[0]; // Asumimos que la primera columna es la clave primaria
+
+            // Imprimir cabecera de tabla
+            echo "<th>" . ucfirst($clavePrimaria) . "</th>";
+            foreach ($keys as $col) {
+                if ($col !== $clavePrimaria) {
+                    echo "<th>" . ucfirst($col) . "</th>";
+                    $columnas[] = $col;
+                }
+            }
+            echo "<th>Acciones</th>";
+        }
+        ?>
+    </tr>
+</thead>
+
+<tbody>
+    <?php
+    // Reimprimir primera fila si existe
+    if ($primerFila) {
+        echo "<tr>";
+        echo "<td>" . htmlspecialchars($primerFila[$clavePrimaria]) . "</td>";
+        foreach ($columnas as $col) {
+            echo "<td>" . htmlspecialchars($primerFila[$col]) . "</td>";
+        }
+        echo "<td>
+            <a href='#editProductModal' class='edit btn btn-sm btn-info' data-prod-id='{$primerFila[$clavePrimaria]}'>Editar</a>
+            <a href='#deleteProductModal' class='delete btn btn-sm btn-danger' data-prod-id='{$primerFila[$clavePrimaria]}'>Borrar</a>
+        </td>";
+        echo "</tr>";
+    }
+
+    // Imprimir el resto de filas
+    while ($fila = mysqli_fetch_assoc($resultado)) {
+        echo "<tr>";
+        echo "<td>" . htmlspecialchars($fila[$clavePrimaria]) . "</td>";
+        foreach ($columnas as $col) {
+            echo "<td>" . htmlspecialchars($fila[$col]) . "</td>";
+        }
+        echo "<td>
+            <a href='#editProductModal' class='edit btn btn-sm btn-info' data-prod-id='{$fila[$clavePrimaria]}'>Editar</a>
+            <a href='#deleteProductModal' class='delete btn btn-sm btn-danger' data-prod-id='{$fila[$clavePrimaria]}'>Borrar</a>
+        </td>";
+        echo "</tr>";
+    }
+    ?>
+</tbody>
+
             </table>
         </div>
     </div>
