@@ -75,10 +75,10 @@ $(document).ready(function(){
     // ----------------------------
     // Al abrir el modal, se pasa el id del registro a eliminar
     $('#deleteProductModal').on('show.bs.modal', function(e){
-        var button = $(e.relatedTarget); // Botón que abrió el modal
-        var id = button.data('prod-id');
-        $(this).find('#id_d').val(id);
-    });
+    var button = $(e.relatedTarget); // Botón que abrió el modal
+    var id = button.data('prod-id'); // Tomar ID del botón
+    $(this).find('input[name="id"]').val(id); // Asignar al input hidden
+});
 
     // Cuando se confirma la eliminación
     $('#deleteProductModal form').on('submit', function(e){
@@ -326,8 +326,8 @@ while ($fila = mysqli_fetch_assoc($resultado)) {
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 				</div>
 				<div class="modal-body">
-					<input type="hidden" id="id_d" name="id" class="form-control">                					
-					<p>Esta seguro que desea borrar este producto?</p>
+					<input type="hidden" id="id_d" name="id" class="form-control">              					
+					<p>¿Está seguro que desea borrar este producto?</p>
 					<p class="text-warning"><small>Esta accion sera permanente.</small></p>
 				</div>
 				<div class="modal-footer">
@@ -342,7 +342,7 @@ while ($fila = mysqli_fetch_assoc($resultado)) {
                 <footer class="py-4 bg-light mt-auto">
                     <div class="container-fluid px-4">
                         <div class="d-flex align-items-center justify-content-between small">
-                            <div class="text-muted">Copyright &copy; Sara Lagos 32251299</div>
+                            <div class="text-muted">Copyright &copy; Todos los derechos reservados. Sara Lagos 32251299 & Lissy Garcia 32311172</div>
                         </div>
                     </div>
                 </footer>

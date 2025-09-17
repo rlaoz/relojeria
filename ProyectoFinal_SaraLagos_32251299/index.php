@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="js/script.js"></script>
-    <title>Éphémère</title>
+    <title>Manjares </title>
 </head>
 <body onload="leeElemento()">
 
@@ -49,7 +49,7 @@
 
 <!--Inicio productos-->
 <main class="contenedor">
-  <h1>Tablas Disponibles</h1>
+  <h1>Tablas Principales</h1>
   <div class="grid">
     <?php foreach($tablas as $tabla) { ?>
       <div class="productos">
@@ -72,7 +72,7 @@
         <!-- Logo y descripción -->
         <div class="col-lg-4">
           <div class="mb-4 footer-logo-wrap">
-            <a href="#" class="footer-logo">Éphémère<span>.</span></a>
+            <a href="#" class="footer-logo">Manjares de Honduras<span>.</span></a>
           </div>
           <p class="mb-4">
             Donec facilisis quam ut purus rutrum lobortis. Donec vitae odio quis nisl dapibus malesuada. Nullam ac aliquet velit. Aliquam vulputate velit imperdiet dolor tempor tristique.
@@ -103,9 +103,9 @@
         <!-- Información de contacto -->
         <div class="col-lg-4">
           <h5 class="mb-4">Contáctanos</h5>
-          <p class="mb-2"><span class="fa fa-envelope"></span> info@tuempresa.com</p>
+          <p class="mb-2"><span class="fa fa-envelope"></span> info@manjares.com</p>
           <p class="mb-2"><span class="fa fa-phone"></span> +123 456 7890</p>
-          <p class="mb-2"><span class="fa fa-map-marker"></span> Calle 123, Ciudad, País</p>
+          <p class="mb-2"><span class="fa fa-map-marker"></span> Calle 123, Tegucigalpa, Honduras</p>
         </div>
   
         <!-- Enlaces del sitio -->
@@ -121,7 +121,7 @@
       <div class="border-top copyright">
         <div class="row pt-4">
           <div class="col-lg-6 text-center text-lg-start">
-            <p class="mb-2"> Copyright 2024 Éphémère. Todos los derechos reservados Sara Lagos 32251299.</p>
+            <p class="mb-2"> Copyright &copy; 2025. Todos los derechos reservados. Sara Lagos 32251299 & Lissy Garcia 32311172.</p>
           </div>
         </div>
       </div>

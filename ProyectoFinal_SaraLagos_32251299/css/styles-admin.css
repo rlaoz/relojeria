@@ -12064,3 +12064,61 @@ body {
 }
 
 
+/* ===============================
+   Estilo guacamaya para tablas
+   =============================== */
+
+table#datatablesSimple {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background-color: var(--blanco);
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+table#datatablesSimple thead {
+    background-color: #1B2E70; /* azul profundo */
+    color: #fff;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+table#datatablesSimple thead th {
+    padding: 12px 15px;
+    border-bottom: 2px solid rgba(255,255,255,0.3);
+}
+
+table#datatablesSimple tbody tr {
+    transition: background-color 0.3s, transform 0.2s;
+    background-color: var(--blanco); /* todas blancas por defecto */
+}
+
+table#datatablesSimple tbody tr:hover {
+    background-color: #FFF5B1; /* amarillo suave al pasar cursor */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+
+table#datatablesSimple tbody td {
+    padding: 10px 15px;
+    color: #333;
+}
+
+table#datatablesSimple tbody td:last-child {
+    display: flex;
+    gap: 5px;
+    justify-content: center;
+}
+
+/* Bordes suaves para celdas */
+table#datatablesSimple td, table#datatablesSimple th {
+    border-right: 1px solid rgba(0,0,0,0.05);
+}
+
+table#datatablesSimple td:last-child, table#datatablesSimple th:last-child {
+    border-right: none;
+}

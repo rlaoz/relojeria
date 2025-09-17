@@ -172,7 +172,7 @@ switch($consulta){
 <!-- Footer -->
 <footer class="footer-section bg-dark text-light py-4">
     <div class="container text-center">
-        <p>Copyright &copy; 2024 Éphémère. Todos los derechos reservados Sara Lagos 32251299.</p>
+        <p>Copyright &copy; 2025. Todos los derechos reservados. Sara Lagos 32251299 & Lissy Garcia 32311172</p>
     </div>
 </footer>
 

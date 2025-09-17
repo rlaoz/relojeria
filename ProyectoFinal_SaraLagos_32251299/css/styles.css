@@ -1,13 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400..900&display=swap');
 
 :root {
-    --primario: #3a4660; 
-    --secundario: #c9af98; 
-    --peach: #b85a35;
-    --brown: #cd913e;
-    --blanco: #f3eae6; 
-    --negro: rgb(23, 23, 23);
+    --primario: #1B2E70;  /* Azul profundo más elegante y menos chillón */
+    --secundario: #FFEAA0; /* Amarillo pastel suave, más armónico para fondos */
+    --peach: #D94F4F;      /* Rojo coral apagado, cálido y tropical */
+    --brown: #F29E4C;      /* Naranja quemado suave para hover y detalles */
+    --blanco: #FDFDFD;     /* Blanco cálido para tarjetas y textos */
+    --negro: #1B2E70;      /* Azul profundo para navbar/footer, consistente con primario */
 }
+
+
 
 * {
     font-family: "Playfair Display", serif;
