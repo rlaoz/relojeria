@@ -143,7 +143,7 @@ CREATE TABLE bitacora_menu (
 /* PRODUCTOS */
 INSERT INTO productos (nombre_producto, ubicacion_bodega, cant_actual, precio_costo, precio_venta) VALUES
 ('Azúcar refinada', 'Estante A3', 40, 18.50, 25.00),
-('Sal yodada', 'Estante S1', 35, 5.00, 9.00),
+('Sal yodada', 'Estante S1', 36, 5.00, 9.00),
 ('Arroz blanco', 'Estante R2', 60, 20.00, 30.00),
 ('Lentejas', 'Estante L1', 25, 15.00, 22.00),
 ('Café molido', 'Bodega D1', 50, 30.00, 45.00),
@@ -151,7 +151,9 @@ INSERT INTO productos (nombre_producto, ubicacion_bodega, cant_actual, precio_co
 ('Yogurt natural', 'Bodega D3', 18, 22.00, 32.00),
 ('Pepinos', 'Estante V1', 33, 6.50, 10.00),
 ('Manzanas rojas', 'Estante F1', 40, 15.00, 25.00),
-('Naranjas', 'Estante F2', 42, 14.00, 22.00);
+('Naranjas', 'Estante F2', 42, 14.00, 22.00),
+('Vino Blanco', 'Estante 4', 100, 150.00, 180.00);
+
 
 /* PROVEEDORES */
 INSERT INTO proveedores (nombre, direccion, RTN, ciudad_actual) VALUES
@@ -166,13 +168,20 @@ INSERT INTO proveedores (nombre, direccion, RTN, ciudad_actual) VALUES
 ('Verduras Selectas', 'Col. 15 de Septiembre', '9999-II-09', 'Juticalpa'),
 ('Jugos Naturales HN', 'Col. El Bosque', '1010-JJ-10', 'Choluteca');
 
+
 /* ACOMPAÑANTES */
 INSERT INTO acompaniante (nombre, precio) VALUES
 ('tortillas de maíz', 12.00),
 ('ensalada de repollo', 18.50),
 ('frijoles fritos', 20.00),
 ('chismol', 15.00),
-('papas al horno', 25.00);
+('papas al horno', 25.00),
+('ensalada mixta', 17.50),
+('plátanos fritos', 14.00),
+('papas fritas', 19.00),
+('ensalada de pepino', 16.50),
+('salsa picante', 10.00);
+
 
 /* PLATOS */
 INSERT INTO platos (nombre, precio) VALUES
@@ -180,7 +189,13 @@ INSERT INTO platos (nombre, precio) VALUES
 ('Baleadas especiales', 55.00),
 ('Tacos hondureños', 70.00),
 ('Pollo frito tradicional', 85.00),
-('Filete de res asado', 160.00);
+('Filete de res asado', 160.00),
+('Carne asada con guarnición', 150.00),
+('Pescado frito con ensalada', 120.00),
+('Pollo al ajillo', 95.00),
+('Tamal de elote', 45.00),
+('Sopa de pollo tradicional', 60.00);
+
 
 /* MENÚS */
 INSERT INTO menu (fecha_elaboracion, descripcion) VALUES
@@ -188,26 +203,46 @@ INSERT INTO menu (fecha_elaboracion, descripcion) VALUES
 ('2025-07-20', 'Menu fin de semana'),
 ('2025-07-25', 'Menu aniversario'),
 ('2025-07-28', 'Menu especial feriado'),
-('2025-07-31', 'Menu cierre de mes');
+('2025-07-31', 'Menu cierre de mes'),
+('2025-08-15', 'Menu de mitad de mes'),
+('2025-08-20', 'Menu fin de semana extendido'),
+('2025-08-25', 'Menu aniversario deluxe'),
+('2025-08-28', 'Menu especial festivo');
+
 
 /* BITÁCORA MENÚ */
 INSERT INTO bitacora_menu (cod_menu, usuario, desc_operacion, fecha_hora_operacion) VALUES
-(1, 'Carlos M', 'Inserción de menú vegetariano', '2025-07-01 08:30:00'),
-(2, 'María L', 'Actualización de precios de platos', '2025-07-02 10:45:00'),
-(3, 'Lissy G', 'Eliminación de menú de temporada', '2025-07-03 11:00:00'),
-(4, 'Esteban', 'Inserción de menú infantil', '2025-07-05 12:15:00'),
-(5, 'Sara L', 'Corrección de descripción en menú especial', '2025-07-06 09:50:00'),
-(5, 'Andrea', 'Reactivación de menú regional', '2025-07-08 07:40:00');
+(1, 'Carlos M', 'Creación de menú mitad de mes', '2025-07-15 08:30:00'),
+(2, 'María L', 'Actualización de menú fin de semana', '2025-07-20 10:45:00'),
+(3, 'Lissy G', 'Eliminación de menú aniversario', '2025-07-25 11:00:00'),
+(4, 'Esteban', 'Inserción de menú especial feriado', '2025-07-28 12:15:00'),
+(5, 'Sara L', 'Corrección de menú cierre de mes', '2025-07-31 09:50:00'),
+(6, 'Andrea', 'Creación de menú mitad de mes agosto', '2025-08-15 07:40:00'),
+(7, 'Luis P', 'Actualización de menú fin de semana extendido', '2025-08-20 08:20:00'),
+(8, 'Marta R', 'Revisión de menú aniversario deluxe', '2025-08-25 09:10:00'),
+(9, 'Jorge T', 'Inserción de menú especial festivo', '2025-08-28 10:00:00');
+
+
+
 
 /* PRODUCTO - ACOMPAÑANTE */
-   
+-- Aquí debes conocer los cod_producto y cod_acompaniante generados automáticamente
+-- Si quieres insertar manualmente, primero revisa los IDs generados con SELECT
+-- Ejemplo suponiendo que IDs quedaron consecutivos desde 1 en ambas tablas:    
 /* ACOMPAÑANTE - PLATO */
 INSERT INTO acompaniante_plato (cod_plato, cod_acompaniante) VALUES
 (1, 1),
 (2, 3),
 (3, 4),
 (4, 2),
-(5, 5);
+(5, 5),
+(6, 6),
+(6, 7),
+(7, 8),
+(8, 9),
+(9, 10),
+(10, 6),
+(10, 7);
 
 /* MENÚ - PLATO */
 INSERT INTO menu_plato (cod_plato, cod_menu, cant_producir, existencia_actual) VALUES
@@ -215,7 +250,13 @@ INSERT INTO menu_plato (cod_plato, cod_menu, cant_producir, existencia_actual) V
 (2, 2, 30, 15),
 (3, 3, 35, 20),
 (4, 4, 25, 10),
-(5, 5, 20, 12);
+(5, 5, 20, 12),
+(6, 6, 20, 15),
+(7, 6, 25, 20),
+(8, 7, 15, 10),
+(9, 7, 30, 25),
+(10, 8, 40, 35);
+
 
 /* PRODUCTO - PROVEEDOR */
 INSERT INTO producto_proveedor (cod_producto, cod_proveedor) VALUES
@@ -231,6 +272,19 @@ INSERT INTO producto_proveedor (cod_producto, cod_proveedor) VALUES
 (10, 10),
 (5, 2),
 (8, 5);
+
+INSERT INTO producto_acompaniante (cod_producto, cod_acompaniante, cantidad) VALUES
+(1, 1, 5),   -- Azúcar refinada con tortillas de maíz
+(2, 2, 10),  -- Sal yodada con ensalada de repollo
+(3, 3, 8),   -- Arroz blanco con frijoles fritos
+(4, 4, 7),   -- Lentejas con chismol
+(5, 5, 6),   -- Café molido con papas al horno
+(6, 6, 4),   -- Mantequilla con ensalada mixta
+(7, 7, 3),   -- Yogurt natural con plátanos fritos
+(8, 8, 9),   -- Pepinos con papas fritas
+(9, 9, 5),   -- Manzanas rojas con ensalada de pepino
+(10, 10, 2); -- Naranjas con salsa picante
+
 
 /* TELÉFONOS DE PROVEEDORES */
 INSERT INTO tel_proveedor (cod_proveedor, telefono) VALUES
@@ -268,6 +322,57 @@ DELIMITER //
 
 CREATE TRIGGER actualizar_fecha_plato
 BEFORE UPDATE ON plato
+FOR EACH ROW
+BEGIN
+    SET NEW.fecha_hora_modificacion = NOW();
+END;
+//
+
+DELIMITER ;
+
+
+/* CREACION DE TRIGGERS  PARA MENUS*/
+
+DELIMITER //
+
+CREATE TRIGGER insercion_fecha_menu
+BEFORE INSERT ON menu
+FOR EACH ROW
+BEGIN
+    SET NEW.fecha_hora_creacion = NOW();
+END;
+//
+
+
+DELIMITER //
+
+CREATE TRIGGER modificacion_fecha_menu
+BEFORE UPDATE ON menu
+FOR EACH ROW
+BEGIN
+    SET NEW.fecha_hora_modificacion = NOW();
+END;
+//
+
+/* CREACION DE TRIGGERS  PARA PLATOS*/
+
+DELIMITER //
+
+CREATE TRIGGER insercion_fecha_plato
+BEFORE INSERT ON platos
+FOR EACH ROW
+BEGIN
+    SET NEW.fecha_hora_creacion = NOW();
+END;
+//
+
+DELIMITER ;
+
+
+DELIMITER //
+
+CREATE TRIGGER actualizar_fecha_plato
+BEFORE UPDATE ON platos
 FOR EACH ROW
 BEGIN
     SET NEW.fecha_hora_modificacion = NOW();

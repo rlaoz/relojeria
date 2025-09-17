@@ -43,17 +43,18 @@
 </div>  
 </nav>
 <!-- Fin nav/header-->
-
 <!--Inicio productos-->
 <main class="contenedor">
   <h1>Tablas</h1>
   <div class="grid">
-    <?php foreach($tablas as $tabla) { ?>
+    <?php foreach($tablas as $tabla) { 
+        $nombre_mostrar = ucwords(str_replace('_', ' ', $tabla));
+    ?>
       <div class="productos">
         <a href="admin.php?tabla=<?php echo $tabla; ?>">
-          <img class="producto-imagen" src="img/<?php echo $tabla; ?>.png" alt="Imagen <?php echo $tabla; ?>">
+          <img class="producto-imagen" src="img/<?php echo $tabla; ?>.png" alt="Imagen <?php echo $nombre_mostrar; ?>">
           <div class="producto-informacion">
-            <p class="producto-nombre"><?php echo ucfirst($tabla); ?></p>
+            <p class="producto-nombre"><?php echo $nombre_mostrar; ?></p>
           </div>
         </a>
       </div>

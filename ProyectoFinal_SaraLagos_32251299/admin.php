@@ -137,14 +137,15 @@ $('.edit').on('click', function(){
     </head>
     <body class="sb-nav-fixed">
         <div class="container mt-4">
-    <h1>Tabla: <?php echo ucfirst($tabla); ?></h1>
+    <h1>Tabla: <?php echo ucwords(str_replace("_", " ", $tabla)); ?></h1>
+
     <a href="index.php" class="btn btn-primary mb-3">Volver</a>
     <a href="#addProductModal" class="btn btn-success mb-3" data-toggle="modal">Nuevo Registro</a>
 
     <div class="card mb-4">
         <div class="card-header">
             <i class="fas fa-table me-1"></i>
-            Registros de <?php echo ucfirst($tabla); ?>
+            Registros de <?php echo ucwords(str_replace("_", " ", $tabla)); ?>
         </div>
         <div class="card-body">
             <table id="datatablesSimple">
@@ -168,9 +169,10 @@ if ($primerFila) {
 
 // Imprimir encabezado
 echo "<thead><tr>";
-echo "<th>" . ucfirst($clavePrimaria) . "</th>";
+echo "<th>" . ucfirst(str_replace("_", " ", $clavePrimaria)) . "</th>";
 foreach ($columnas as $col) {
-    echo "<th>" . ucfirst($col) . "</th>";
+    echo "<th>" . ucfirst(str_replace("_", " ", $col)) . "</th>";
+
 }
 echo "<th>Acciones</th>";
 echo "</tr></thead>";
