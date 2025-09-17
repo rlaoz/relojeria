@@ -13,9 +13,10 @@ function obtenerDatosModal(modal) {
 
 function enviarDatos(tabla, tipoOperacion, modal) {
     const datos = obtenerDatosModal(modal);
-    datos['type'] = tipoOperacion;  // 1=agregar, 2=editar, 3=eliminar
+    datos['type'] = tipoOperacion;  // 1=agregar, 2=editar
     datos['tabla'] = tabla;
 
+    console.log("Datos a enviar:", datos);
    $.ajax({
     url: 'controladores/controlador.php',
     method: 'POST',

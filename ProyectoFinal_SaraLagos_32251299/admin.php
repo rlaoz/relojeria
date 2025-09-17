@@ -1,5 +1,7 @@
 <?php
 require __DIR__ . '/includes/funciones.php';
+$omitidos = ['fecha_hora_creacion', 'fecha_hora_modificacion'];
+
 
 // Obtener la tabla desde GET
 $tabla = $_GET['tabla'] ?? '';
@@ -28,7 +30,7 @@ if(!$resultado){
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>CRUD <?php echo ucfirst($tabla); ?></title>
+        <title><?php echo ucfirst($tabla); ?></title>
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
         <link href="css/styles-admin.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
@@ -74,11 +76,20 @@ $(document).ready(function(){
     // ELIMINAR
     // ----------------------------
     // Al abrir el modal, se pasa el id del registro a eliminar
-    $('#deleteProductModal').on('show.bs.modal', function(e){
-    var button = $(e.relatedTarget); // Botón que abrió el modal
-    var id = button.data('prod-id'); // Tomar ID del botón
-    $(this).find('input[name="id"]').val(id); // Asignar al input hidden
+$('#deleteProductModal').on('show.bs.modal', function(e){
+    var button = $(e.relatedTarget); 
+    var id = button.data('prod-id'); 
+
+    // Buscamos el input hidden dentro del modal y le ponemos el valor
+    $(this).find('input[type="hidden"]').val(id); 
+
+    console.log("Modal abrir: ID a borrar =", id);
 });
+
+
+
+
+
 
     // Cuando se confirma la eliminación
     $('#deleteProductModal form').on('submit', function(e){
@@ -126,7 +137,7 @@ $('.edit').on('click', function(){
     </head>
     <body class="sb-nav-fixed">
         <div class="container mt-4">
-    <h1>CRUD: <?php echo ucfirst($tabla); ?></h1>
+    <h1>Tabla: <?php echo ucfirst($tabla); ?></h1>
     <a href="index.php" class="btn btn-primary mb-3">Volver</a>
     <a href="#addProductModal" class="btn btn-success mb-3" data-toggle="modal">Nuevo Registro</a>
 
@@ -140,36 +151,7 @@ $('.edit').on('click', function(){
 <thead>
     <tr>
         <?php
-        // Obtener los nombres de columnas
-        /*$primerFila = mysqli_fetch_assoc($resultado);
-        $columnas = [];
-        $clavePrimaria = '';
-
-        if ($primerFila) {
-            $keys = array_keys($primerFila);
-            $clavePrimaria = $keys[0]; // Asumimos que la primera columna es la clave primaria
-
-            // Imprimir cabecera de tabla
-            echo "<th>" . ucfirst($clavePrimaria) . "</th>";
-            foreach ($keys as $col) {
-                if ($col !== $clavePrimaria) {
-                    echo "<th>" . ucfirst($col) . "</th>";
-                    $columnas[] = $col;
-                }
-            }
-            echo "<th>Acciones</th>";
-        }
-
-        if ($primerFila) {
-    $keys = array_keys($primerFila);
-    $clavePrimaria = $keys[0]; // Suponemos la primera columna como PK
-
-    foreach ($keys as $col) {
-        if ($col !== $clavePrimaria) {
-            $columnas[] = $col;
-        }
-    }
-}*/
+ 
 $primerFila = mysqli_fetch_assoc($resultado);
 $columnas = [];
 $clavePrimaria = '';
@@ -197,36 +179,9 @@ echo "</tr></thead>";
 </thead>
 
 <tbody>
-    <?php
-    // Reimprimir primera fila si existe
-    /*if ($primerFila) {
-        echo "<tr>";
-        echo "<td data-name='{$clavePrimaria}'>" . htmlspecialchars($primerFila[$clavePrimaria]) . "</td>";
-        foreach ($columnas as $col) {
-            echo "<td data-name='{$col}'>" . htmlspecialchars($primerFila[$col]) . "</td>";
-        }
-
-        echo "<td>
-            <a href='#editProductModal' class='edit btn btn-sm btn-info' data-prod-id='{$primerFila[$clavePrimaria]}'>Editar</a>
-            <a href='#deleteProductModal' class='delete btn btn-sm btn-danger' data-prod-id='{$primerFila[$clavePrimaria]}'>Borrar</a>
-        </td>";
-        echo "</tr>";
-    }
-
-    // Imprimir el resto de filas
-    while ($fila = mysqli_fetch_assoc($resultado)) {
-        echo "<tr>";
-        echo "<td>" . htmlspecialchars($fila[$clavePrimaria]) . "</td>";
-        foreach ($columnas as $col) {
-            echo "<td>" . htmlspecialchars($fila[$col]) . "</td>";
-        }
-        echo "<td>
-            <a href='#editProductModal' class='edit btn btn-sm btn-info' data-prod-id='{$fila[$clavePrimaria]}'>Editar</a>
-            <a href='#deleteProductModal' class='delete btn btn-sm btn-danger' data-prod-id='{$fila[$clavePrimaria]}'>Borrar</a>
-        </td>";
-        echo "</tr>";
-    }*/
-        if ($primerFila) {
+<?php
+// Primera fila
+if ($primerFila) {
     echo "<tr>";
     echo "<td data-name='{$clavePrimaria}'>" . htmlspecialchars($primerFila[$clavePrimaria]) . "</td>";
     foreach ($columnas as $col) {
@@ -234,12 +189,12 @@ echo "</tr></thead>";
     }
     echo "<td>
         <a href='#editProductModal' class='edit btn btn-sm btn-info' data-prod-id='{$primerFila[$clavePrimaria]}'>Editar</a>
-        <a href='#deleteProductModal' class='delete btn btn-sm btn-danger' data-prod-id='{$primerFila[$clavePrimaria]}'>Borrar</a>
     </td>";
     echo "</tr>";
 }
 
-// Imprimir resto de filas
+
+// Resto de filas
 while ($fila = mysqli_fetch_assoc($resultado)) {
     echo "<tr>";
     echo "<td data-name='{$clavePrimaria}'>" . htmlspecialchars($fila[$clavePrimaria]) . "</td>";
@@ -248,13 +203,12 @@ while ($fila = mysqli_fetch_assoc($resultado)) {
     }
     echo "<td>
         <a href='#editProductModal' class='edit btn btn-sm btn-info' data-prod-id='{$fila[$clavePrimaria]}'>Editar</a>
-        <a href='#deleteProductModal' class='delete btn btn-sm btn-danger' data-prod-id='{$fila[$clavePrimaria]}'>Borrar</a>
     </td>";
     echo "</tr>";
 }
-        
-    ?>
+?>
 </tbody>
+
 
             </table>
         </div>
@@ -271,10 +225,12 @@ while ($fila = mysqli_fetch_assoc($resultado)) {
         </div>
         <div class="modal-body">
           <?php foreach ($columnas as $col): ?>
+            <?php if (!in_array($col, $omitidos)): ?>
             <div class="form-group">
               <label><?php echo ucfirst(str_replace("_", " ", $col)); ?></label>
               <input type="text" name="<?php echo $col; ?>" class="form-control" required>
             </div>
+            <?php endif; ?>
           <?php endforeach; ?>
         </div>
         <div class="modal-footer">
@@ -286,8 +242,6 @@ while ($fila = mysqli_fetch_assoc($resultado)) {
     </div>
   </div>
 </div>
-
-<!-- Edit Modal HTML -->
 <div id="editProductModal" class="modal fade">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -300,10 +254,12 @@ while ($fila = mysqli_fetch_assoc($resultado)) {
           <input type="hidden" name="<?php echo $clavePrimaria; ?>" id="edit_<?php echo $clavePrimaria; ?>">
 
           <?php foreach ($columnas as $col): ?>
+            <?php if (!in_array($col, $omitidos)): ?>
             <div class="form-group">
               <label><?php echo ucfirst(str_replace("_", " ", $col)); ?></label>
               <input type="text" name="<?php echo $col; ?>" id="edit_<?php echo $col; ?>" class="form-control" required>
             </div>
+            <?php endif; ?>
           <?php endforeach; ?>
         </div>
         <div class="modal-footer">
@@ -316,28 +272,6 @@ while ($fila = mysqli_fetch_assoc($resultado)) {
   </div>
 </div>
 
-<!-- Delete Modal HTML -->
-<div id="deleteProductModal" class="modal fade">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<form>
-				<div class="modal-header">						
-					<h4 class="modal-title">Borrar Producto</h4>
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				</div>
-				<div class="modal-body">
-					<input type="hidden" id="id_d" name="id" class="form-control">              					
-					<p>¿Está seguro que desea borrar este producto?</p>
-					<p class="text-warning"><small>Esta accion sera permanente.</small></p>
-				</div>
-				<div class="modal-footer">
-					<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancelar">
-					<input type="submit" class="btn btn-danger" value="Borrar" id="delete">
-				</div>
-			</form>
-		</div>
-	</div>
-</div>
 </main>
                 <footer class="py-4 bg-light mt-auto">
                     <div class="container-fluid px-4">

@@ -97,7 +97,7 @@ switch($consulta){
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
 
 <!-- Navbar -->
 <nav class="custom-navbar navbar navbar-expand-md">
@@ -107,15 +107,19 @@ switch($consulta){
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbars">
-            <ul class="navbar-nav ms-auto mb-2 mb-md-0">
-                <li class="nav-item"><a class="nav-link" href="index.php">Tablas principales</a></li>
-                <li class="nav-item"><a class="nav-link" href="consultas.php">Consultas</a></li>
-            </ul>
-        </div>
+        <ul class="custom-navbar-nav navbar-nav ms-auto mb-2 mb-md-0">
+            <li class="nav-item active"><a class="nav-link" href="index.php">Tablas</a></li>
+            <li><a class="nav-link" href="consultas.php">Consultas</a></li>
+
+        </ul>
+
+
+        <p id="idElemento" class="Elemento"></p>
+    </div>
     </div>
 </nav>
 
-<main class="container my-4">
+<main class="container my-4 flex-fill">
         <!-- Botón de regreso -->
     <div class="mb-3">
         <a href="index.php" class="btn btn-secondary">&larr; Regresar a la página principal</a>
@@ -170,7 +174,7 @@ switch($consulta){
 </main>
 
 <!-- Footer -->
-<footer class="footer-section bg-dark text-light py-4">
+<footer class="footer-section bg-blue text-light py-4 mt-auto">
     <div class="container text-center">
         <p>Copyright &copy; 2025. Todos los derechos reservados. Sara Lagos 32251299 & Lissy Garcia 32311172</p>
     </div>

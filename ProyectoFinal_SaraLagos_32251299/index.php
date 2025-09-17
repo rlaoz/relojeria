@@ -32,15 +32,12 @@
 
     <div class="collapse navbar-collapse" id="navbars">
         <ul class="custom-navbar-nav navbar-nav ms-auto mb-2 mb-md-0">
-            <li class="nav-item active"><a class="nav-link" href="index.php">Tablas principales</a></li>
+            <li class="nav-item active"><a class="nav-link" href="index.php">Tablas</a></li>
             <li><a class="nav-link" href="consultas.php">Consultas</a></li>
 
         </ul>
 
-        <ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
-            <li><a class="nav-link" href="/auth/login.php"><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#5c715e" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" /><path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /></svg></a></li>
-            <li><a class="nav-link" href="/auth/login.php"><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-shopping-cart" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#5c715e" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M17 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M17 17h-11v-14h-2" /><path d="M6 5l14 1l-1 7h-13" /></svg></a></li>
-        </ul>
+
         <p id="idElemento" class="Elemento"></p>
     </div>
 </div>  
@@ -49,7 +46,7 @@
 
 <!--Inicio productos-->
 <main class="contenedor">
-  <h1>Tablas Principales</h1>
+  <h1>Tablas</h1>
   <div class="grid">
     <?php foreach($tablas as $tabla) { ?>
       <div class="productos">

@@ -4,7 +4,7 @@
        private $hostBd = 'localhost';
        private $nombreBd = 'manjares_de_honduras';
        private $usuarioBd = 'root';
-       private $passwordBd = 'Jaehee1201';
+       private $passwordBd = 'Lissy_root';
        private $puertoBd = '3306';
        public function __construct(){
           try{

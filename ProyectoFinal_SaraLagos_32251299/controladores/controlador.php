@@ -1,6 +1,14 @@
+
+<?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+?>
 <?php
 include '../config/conexion.php';
 $pdo = new Conexion();
+
+
 
 // Obtener datos JSON
 $input = file_get_contents('php://input');
@@ -30,21 +38,24 @@ if (!array_key_exists($tabla, $tablas_config)) {
 }
 
 $campos = $tablas_config[$tabla];
+$omitidos = ['fecha_hora_creacion', 'fecha_hora_modificacion'];
+$campos_visibles = array_diff($campos, $omitidos); // columnas que sí recibimos del front
+
 $valores = [];
 foreach ($campos as $campo) {
     $valores[$campo] = $data[$campo] ?? null;
 }
-
 // ==========================
 // AGREGAR
 // ==========================
-if ($type == 1) {
-    $sql = "INSERT INTO $tabla (" . implode(",", $campos) . ") VALUES (:" . implode(",:", $campos) . ")";
+if ($type == 1) { // AGREGAR
+    $sql = "INSERT INTO $tabla (" . implode(",", $campos_visibles) . ") VALUES (:" . implode(",:", $campos_visibles) . ")";
     $stmt = $pdo->prepare($sql);
-    foreach ($campos as $campo) {
+    foreach ($campos_visibles as $campo) {
         $stmt->bindValue(":$campo", $valores[$campo]);
     }
     $res = $stmt->execute();
+
 
     if ($res) {
         echo json_encode(['status' => 'success']);
@@ -57,17 +68,18 @@ if ($type == 1) {
 // ==========================
 // EDITAR
 // ==========================
-if ($type == 2) {
-    $pk = $campos[0]; // asumimos primer campo como PK
+if ($type == 2) { // EDITAR
+    $pk = $campos[0];
     $update_fields = [];
-    foreach ($campos as $c) {
+    foreach ($campos_visibles as $c) { // solo columnas visibles
         if ($c != $pk) $update_fields[] = "$c=:$c";
     }
     $sql = "UPDATE $tabla SET " . implode(",", $update_fields) . " WHERE $pk=:$pk";
     $stmt = $pdo->prepare($sql);
-    foreach ($campos as $c) {
+    foreach ($campos_visibles as $c) {
         $stmt->bindValue(":$c", $valores[$c]);
     }
+    $stmt->bindValue(":$pk", $valores[$pk]);
     $res = $stmt->execute();
 
     if ($res) {
@@ -78,45 +90,14 @@ if ($type == 2) {
     exit;
 }
 
-// ==========================
-// ELIMINAR
-// ==========================
-if ($type == 3) {
-    if (empty($data['id'])) {
-        echo json_encode(['status'=>'error','msg'=>'ID no recibido']);
-        exit;
-    }
 
-    // Definir PK para cada tabla
-    $pk_tablas = [
-        "productos" => "cod_producto",
-        "proveedores" => "cod_proveedor",
-        "acompaniante" => "cod_acompaniante",
-        "platos" => "cod_plato",
-        "menu" => "cod_menu"
-    ];
 
-    if (!array_key_exists($tabla, $pk_tablas)) {
-        echo json_encode(['status'=>'error','msg'=>'Tabla no permitida']);
-        exit;
-    }
 
-    $pk = $pk_tablas[$tabla];
-    $sql = "DELETE FROM $tabla WHERE $pk = :id";
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(':id', $data['id']);
-    $res = $stmt->execute();
 
-    if ($res) {
-        echo json_encode(['status'=>'success']);
-    } else {
-        echo json_encode(['status'=>'error','msg'=>$stmt->errorInfo()]);
-    }
-    exit;
-}
 
 // Si llega aquí, tipo inválido
 echo json_encode(['status'=>'error','msg'=>'Tipo de operación no válido']);
+echo json_encode(['status'=>'debug', 'pk'=>$pk, 'valor'=>$valor, 'tabla'=>$tabla]);
 exit;
 ?>
 
