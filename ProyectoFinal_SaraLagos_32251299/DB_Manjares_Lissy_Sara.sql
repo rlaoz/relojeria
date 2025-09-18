@@ -307,26 +307,30 @@ INSERT INTO tel_proveedor (cod_proveedor, telefono) VALUES
 
 DELIMITER //
 
+USE manjares_de_honduras;
+
+DROP TRIGGER IF EXISTS insercion_fecha_plato;
 CREATE TRIGGER insercion_fecha_plato
-BEFORE INSERT ON plato
+BEFORE INSERT ON platos
 FOR EACH ROW
 BEGIN
     SET NEW.fecha_hora_creacion = NOW();
 END;
-//
+
 
 DELIMITER ;
 
 
 DELIMITER //
 
+DROP TRIGGER IF EXISTS actualizar_fecha_plato;
 CREATE TRIGGER actualizar_fecha_plato
-BEFORE UPDATE ON plato
+BEFORE UPDATE ON platos
 FOR EACH ROW
 BEGIN
     SET NEW.fecha_hora_modificacion = NOW();
 END;
-//
+
 
 DELIMITER ;
 
@@ -335,16 +339,20 @@ DELIMITER ;
 
 DELIMITER //
 
+DROP TRIGGER IF EXISTS insercion_fecha_menu;
+
 CREATE TRIGGER insercion_fecha_menu
 BEFORE INSERT ON menu
 FOR EACH ROW
 BEGIN
     SET NEW.fecha_hora_creacion = NOW();
 END;
-//
+
 
 
 DELIMITER //
+
+DROP TRIGGER IF EXISTS modificacion_fecha_menu;
 
 CREATE TRIGGER modificacion_fecha_menu
 BEFORE UPDATE ON menu
@@ -352,25 +360,27 @@ FOR EACH ROW
 BEGIN
     SET NEW.fecha_hora_modificacion = NOW();
 END;
-//
+
 
 /* CREACION DE TRIGGERS  PARA PLATOS*/
 
 DELIMITER //
 
+DROP TRIGGER IF EXISTS insercion_fecha_plato;
 CREATE TRIGGER insercion_fecha_plato
 BEFORE INSERT ON platos
 FOR EACH ROW
 BEGIN
     SET NEW.fecha_hora_creacion = NOW();
 END;
-//
+
 
 DELIMITER ;
 
 
 DELIMITER //
 
+DROP TRIGGER IF EXISTS actualizar_fecha_plato;
 CREATE TRIGGER actualizar_fecha_plato
 BEFORE UPDATE ON platos
 FOR EACH ROW
@@ -386,16 +396,19 @@ DELIMITER ;
 
 DELIMITER //
 
+DROP TRIGGER IF EXISTS insercion_fecha_menu;
 CREATE TRIGGER insercion_fecha_menu
 BEFORE INSERT ON menu
 FOR EACH ROW
 BEGIN
     SET NEW.fecha_hora_creacion = NOW();
 END;
-//
+
 
 
 DELIMITER //
+
+DROP TRIGGER IF EXISTS modificacion_fecha_menu;
 
 CREATE TRIGGER modificacion_fecha_menu
 BEFORE UPDATE ON menu
@@ -403,4 +416,3 @@ FOR EACH ROW
 BEGIN
     SET NEW.fecha_hora_modificacion = NOW();
 END;
-//
